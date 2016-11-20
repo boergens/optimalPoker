@@ -94,7 +94,7 @@ for idx5 = 1 : 32
     myhand_hold = myhand(logical(whichtohold{idx5}));
     myhand_nohold = myhand(~logical(whichtohold{idx5}));
     
-    cards0 = sort([repmat([myhand_hold;myhand_nohold],1,1, testN); randi(4, 5 - length(myhand_hold), 1, testN) + 10 * randi(13, 5 - length(myhand_hold), 1, testN) + 1]);
+    cards0 = sort([repmat([myhand_hold;myhand_nohold],1,1, testN); randi(4, 5 - length(myhand_hold), 1, testN) + 10 * (randi(13, 5 - length(myhand_hold), 1, testN) + 1)]);
     cards0(:, :, squeeze(any(diff(cards0) == 0))) = [];
     cards1 = cards0(~ismember(cards0, myhand_nohold));
     cards1 = reshape(cards1, 5, 1, []);
