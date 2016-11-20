@@ -1,4 +1,4 @@
-function optimalPoker()
+function payout_matrix = optimalPoker()
 faces = char([9827, 9824, 9829, 9830]);
 money = {@isRoyalFlush, 3000 %handle not used
     @isStraightFlush, 250 %handle not used
@@ -49,7 +49,7 @@ money = {@isRoyalFlush, 3000 %handle not used
         
     end
     function v = payoutFast(hand)
-        v = zeros(1, 1, size(hand, 3));
+        v = zeros(size(hand, 3), size(money, 1));
         nk = isNOfAKind(hand);
         isfFlush1 = isFlush(hand);
         isStraight1 = isStraight(hand);
@@ -57,15 +57,15 @@ money = {@isRoyalFlush, 3000 %handle not used
         for idx = size(money, 1) : -1 : 1
             switch idx
                 case 1
-                    v(isfFlush1&isStraight1&couldBeRoyal) = money{idx, 2};
+                    v(isfFlush1&isStraight1&couldBeRoyal, idx) = money{idx, 2};
                 case 2
-                    v(isfFlush1&isStraight1) = money{idx, 2};
+                    v(isfFlush1&isStraight1, idx) = money{idx, 2};
                 case 5
-                    v(isfFlush1) = money{idx, 2};
+                    v(isfFlush1, idx) = money{idx, 2};
                 case 6
-                    v(isStraight1) = money{idx, 2};
+                    v(isStraight1, idx) = money{idx, 2};
                 otherwise
-                    v(feval(money{idx,1}, hand, nk)) = money{idx, 2};
+                    v(feval(money{idx,1}, hand, nk), idx) = money{idx, 2};
             end
         end
     end
@@ -101,8 +101,9 @@ for idx5 = 1 : 32
     cardsstore = [round(cards1 / 10), mod(cards1, 10)];
     cardsstore = uint8(cardsstore);
     simul_result = payoutFast(cardsstore);
-    payout(idx5) = mean(simul_result);
-    payout_std(idx5) = std(mean(reshape(simul_result(1 : floor(end/10) * 10), 10, [])'));
+    payout(idx5) = mean(sum(simul_result,2));
+    payout_std(idx5) = std(mean(reshape(sum(simul_result(1 : floor(end/10) * 10, :), 2), 10, []), 2));
+    payout_matrix(33 - idx5, :) = sum(simul_result);
 end
 [~, idx5]  = max(payout);
 myhand_hold = myhand(logical(whichtohold{idx5}));
