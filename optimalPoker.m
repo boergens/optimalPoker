@@ -51,22 +51,24 @@ money = {@isRoyalFlush, 3000 %handle not used
     function v = payoutFast(hand)
         v = zeros(size(hand, 3), size(money, 1));
         nk = isNOfAKind(hand);
-        isfFlush1 = isFlush(hand);
+        isFlush1 = isFlush(hand);
         isStraight1 = isStraight(hand);
         couldBeRoyal = all(hand(:, 1, :) > 9);
         for idx = size(money, 1) : -1 : 1
             switch idx
                 case 1
-                    v(isfFlush1&isStraight1&couldBeRoyal, idx) = money{idx, 2};
+                    selected = isFlush1 & isStraight1 & couldBeRoyal;
                 case 2
-                    v(isfFlush1&isStraight1, idx) = money{idx, 2};
+                    selected = isFlush1 & isStraight1;
                 case 5
-                    v(isfFlush1, idx) = money{idx, 2};
+                    selected = isFlush1;
                 case 6
-                    v(isStraight1, idx) = money{idx, 2};
+                    selected = isStraight1;
                 otherwise
-                    v(feval(money{idx,1}, hand, nk), idx) = money{idx, 2};
+                    selected = feval(money{idx,1}, hand, nk);
             end
+            v(selected, :) = 0;
+            v(selected, idx) = money{idx, 2};
         end
     end
     function outputer(hand, payout_value, payout_std)
