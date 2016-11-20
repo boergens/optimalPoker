@@ -69,7 +69,7 @@ money = {@isRoyalFlush, 3000 %handle not used
             end
         end
     end
-    function outputer(hand, payout_value)
+    function outputer(hand, payout_value, payout_std)
         stringF = ' 2 3 4 5 6 7 8 910 J Q K A';
         for idx9 = 1 : length(hand)
             fprintf('%s%s ', stringF(2 * round(hand(idx9) / 10) - 3 : 2 * round(hand(idx9) / 10) - 2),faces(5 - mod(hand(idx9), 10)));
@@ -78,16 +78,15 @@ money = {@isRoyalFlush, 3000 %handle not used
             fprintf('hold none');
         end
         if payout_value >= 0
-            fprintf(': %0.2f $', payout_value');
+            fprintf(': %0.2f $ +- %0.2f $', payout_value, payout_std);
         end
         fprintf('\n');
     end
-
-testN = 300000;
+testN = 50000;
+rng('shuffle');
 cardspool = 10 * round((1:52)/4 +1.25)' + repmat(1:4,1, 13)';
 myhand = sort(cardspool(randperm(52,5)));
 outputer(myhand, -1)
-
 for idx5 = 1 : 32
     for idx6 = 1 : 5
         whichtohold{idx5}(6 - idx6) = mod(floor((idx5 - 1) / (2 ^ (idx6 - 1))), 2);
@@ -101,16 +100,18 @@ for idx5 = 1 : 32
     cards1 = reshape(cards1, 5, 1, []);
     cardsstore = [round(cards1 / 10), mod(cards1, 10)];
     cardsstore = uint8(cardsstore);
-    payout(idx5) = mean(payoutFast(cardsstore));
+    simul_result = payoutFast(cardsstore);
+    payout(idx5) = mean(simul_result);
+    payout_std(idx5) = std(mean(reshape(simul_result(1 : floor(end/10) * 10), 10, [])'));
 end
-[best_payout, idx5]  = max(payout);
+[~, idx5]  = max(payout);
 myhand_hold = myhand(logical(whichtohold{idx5}));
-outputer(myhand_hold, best_payout);
-showall = input('show all?', 's');
+outputer(myhand_hold, payout(idx5), payout_std(idx5));
+showall = input('show all? ', 's');
 if strcmp(showall, 'y')
     for idx5 = 32 : -1 : 1
         myhand_hold = myhand(logical(whichtohold{idx5}));
-        outputer(myhand_hold, payout(idx5));
+        outputer(myhand_hold, payout(idx5), payout_std(idx5));
     end
 end
 end
