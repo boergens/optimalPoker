@@ -17,3 +17,6 @@
     width: 25px;
     filter: brightness(50%);
 }
+.clicked {
+    text-align: left;
+}

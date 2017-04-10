@@ -2,7 +2,7 @@
 
 var current = [[-1, -1], [-1, -1], [-1, -1], [-1, -1], [-1, -1]];
 var shuffling = [-1, -1, -1, -1, -1];
-var money = 1000;
+var money = 1003;
 var actual_JSON;
 function loadJSON(filename, callback) {
     var xobj = new XMLHttpRequest();
@@ -26,7 +26,7 @@ function init(filename) {
             shuffling[card_idx] = Math.floor(Math.random() * 5);
         }
     } while (Array.from(new Set(shuffling)).length < 5)    
-    var filename = "games/solution_" + Math.floor(Math.random() * 100) + ".json";
+    var filename = "games/solution_" + Math.floor(Math.random() * 1000) + ".json";
     loadJSON(filename, function(response) {
         // Parse JSON string into object
         actual_JSON = JSON.parse(response);
@@ -69,7 +69,7 @@ function numberToImage(num) {
 function updateView(cards) {
     var card_idx;
     for (card_idx = 0; card_idx < 5; card_idx += 1) {
-        document.getElementById("card" + idx).src = numberToImage(cards[idx]);
+        document.getElementById("card" + card_idx).src = numberToImage(cards[card_idx]);
     }
     document.getElementById("money").innerHTML = "money " + money;
 }
@@ -137,6 +137,7 @@ function isFourOfAKind(cards) {
     var card_idx;
     for (card_idx = 0; card_idx < cards.length; card_idx += 1) {
         temp = numbers[card_idx];
+        numbers[card_idx] = numbers[(card_idx + 1) % numbers.length];
         if (Array.from(new Set(numbers)).length !== 2) {
             return true;
         }
@@ -152,7 +153,7 @@ function isFullHouse(cards) {
 function isThreeOfAKind(cards) {
     var card_idx;
     for (card_idx = 0; card_idx < 5; card_idx += 1) {
-        if (isFourOfAKind(cards.slice(0, idx).concat(cards.slice(idx + 1)))) {
+        if (isFourOfAKind(cards.slice(0, card_idx).concat(cards.slice(card_idx + 1)))) {
             return true;
         }
     }
@@ -181,9 +182,11 @@ function initialize() {
     for (card_idx = 0; card_idx < 5; card_idx += 1) {
         current[card_idx] = [Math.floor(actual_JSON.solution.hand[shuffling[card_idx]] / 10), actual_JSON.solution.hand[shuffling[card_idx]] % 10];
     }
-    money = money - 1;
+    money = money - 3;
     document.getElementById("logo").innerHTML = "";
     document.getElementById("btnDeal").disabled = false;
+    document.getElementById("btnInit").disabled = true;
+    
     
     for (card_idx = 0; card_idx < 5; card_idx += 1) {
         document.getElementById("card" + card_idx).className = "card"
@@ -193,11 +196,18 @@ function initialize() {
 }
 
 function clickPayout(hold_idx, text_to_paste) {
-    document.getElementById("payout" + hold_idx).innerHTML += text_to_paste;
+    if (document.getElementById("payout" + hold_idx).className === "unclicked") {
+        document.getElementById("payout" + hold_idx).innerHTML += text_to_paste;
+        document.getElementById("payout" + hold_idx).className = "clicked";
+    } else {
+        document.getElementById("payout" + hold_idx).innerHTML = document.getElementById("payout" + hold_idx).innerHTML.slice(0, document.getElementById("payout" + hold_idx).innerHTML.indexOf('<'));
+        document.getElementById("payout" + hold_idx).className = "unclicked";
+    }
 }
 
 function deal() {
     document.getElementById("btnDeal").disabled = true;
+    document.getElementById("btnInit").disabled = false;
     var card_idx;
     var currentOld = current.slice();
     for (card_idx = 0; card_idx < 5; card_idx += 1) {
@@ -207,15 +217,15 @@ function deal() {
             document.getElementById("card" + card_idx).src = "PNG-cards-1.3/empty.png";
         }
     }
-    var payoutnames = ["RoyalFlush", "StraightFlush", "FourOfAKind", "FullHouse", "Flush", "Straight", "Threeofkind", "TwoPairs", "JacksOrBetter"];
+    var payoutnames = ["RoyalFlush", "StraightFlush", "FourOfAKind", "FullHouse", "Flush", "Straight", "ThreeOfAKind", "TwoPairs", "JacksOrBetter"];
     var payout = [3000, 250, 125, 40, 35, 20, 15, 10, 5];
     for (card_idx = 0; card_idx < 10; card_idx += 1) {
         if (card_idx === 9) {
-            document.getElementById("logo").innerHTML = "nothing";
+            document.getElementById("logo").innerHTML = "I'm sorry, you won nothing";
             break;
         }
-        if (eval('is' + payoutnames[idx] + '(current)')) {
-            document.getElementById("logo").innerHTML = payoutnames[idx];
+        if (eval('is' + payoutnames[card_idx] + '(current)')) {
+            document.getElementById("logo").innerHTML = "Congratulations, you won " + payout[card_idx] + " with" + payoutnames[card_idx].replace(/([A-Z])/g," $1");
             money += payout[card_idx];
             break;
         }
@@ -227,22 +237,40 @@ function deal() {
         var card_idx;
         var hold_idx_meta = 0;
         var tempstring = "";
+        var issame = true;
         for (card_idx = 0; card_idx < 5; card_idx += 1) {
-            var bit_here = Math.floor(2 * idx / (2 << card_idx)) % 2;
+            var bit_here = Math.floor(2 * hold_idx / (2 << card_idx)) % 2;
+            if ((bit_here === 0) === (document.getElementById("card" + card_idx).className === "cardmediumdark")) {
+                issame = false;
+            }
             hold_idx_meta += bit_here << 4 - shuffling[card_idx];
             var labelsdark = ["", "dark"];
             tempstring += '<img class="cardsmall' + labelsdark[bit_here] + '" src="' + numberToImage(currentOld[card_idx]) + '">';
         }
         var splitup = [];
-        var reporting = "";
+        var reporting = "<br>";
         var payout_idx;
+        var reporting_sub = new Array(9)
         for (payout_idx = 0; payout_idx < 9; payout_idx += 1) {
             var subtotal = actual_JSON.solution.payout_matrix[hold_idx_meta][payout_idx] * payout[payout_idx] / actual_JSON.solution.numberOfTests[hold_idx_meta];
             total += subtotal;
-            reporting += payoutnames[payout_idx] + ' ' + subtotal '<br>'
+            var subtotal_string = subtotal.toFixed(3);
+            if (subtotal_string === "0.000") {
+                subtotal_string = "0";
+            }
+            reporting_sub[payout_idx] = [subtotal_string + ': ' + payoutnames[payout_idx] + '<br>', subtotal];
             
         }
-        tempstring += '<div id=payout"' + hold_idx + ' onClick=clickPayout(' + hold_idx + ',' + reporting + ')">' + total.toFixed(2) + "</div><br>";
+        for (payout_idx = 0; payout_idx < 9; payout_idx += 1) {
+            if (reporting_sub.sort(function (a, b) {return b[1] - a[1]})[payout_idx][1] > 0) {
+                reporting += reporting_sub.sort(function (a, b) {return b[1] - a[1]})[payout_idx][0];
+            }
+        }
+        var style_string = "";
+        if (issame) {
+            style_string = 'style="background-color:green"';
+        }
+        tempstring += '<button type="button" class="unclicked" ' + style_string + 'id="payout' + hold_idx + '" onClick="clickPayout(' + hold_idx + ',\'' + reporting + '\')">' + total.toFixed(2) + "</button><br>";
         outputStrings[hold_idx] = [tempstring, total];
     }
     var sortedStrings = outputStrings.sort(function (a, b) {return b[1] - a[1]});
