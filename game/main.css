@@ -1,0 +1,19 @@
+.card {
+    width: 150px;
+}
+.cardsmall {
+    width: 25px;
+}
+.carddark {
+    width: 150px;
+    filter: brightness(50%);
+}
+.cardmediumdark {
+    width: 150px;
+    filter: brightness(85%);
+}
+
+.cardsmalldark {
+    width: 25px;
+    filter: brightness(50%);
+}

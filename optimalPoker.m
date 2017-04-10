@@ -1,4 +1,4 @@
-function payout_matrix = optimalPoker()
+function y = optimalPoker()
 faces = char([9827, 9824, 9829, 9830]);
 money = {@isRoyalFlush, 3000 %handle not used
     @isStraightFlush, 250 %handle not used
@@ -87,7 +87,7 @@ money = {@isRoyalFlush, 3000 %handle not used
 testN = 50000;
 rng('shuffle');
 cardspool = 10 * round((1:52)/4 +1.25)' + repmat(1:4,1, 13)';
-myhand = sort(cardspool(randperm(52,5)));
+myhand =  sort(cardspool(randperm(52,5)));
 outputer(myhand, -1)
 for idx5 = 1 : 32
     for idx6 = 1 : 5
@@ -106,15 +106,19 @@ for idx5 = 1 : 32
     payout(idx5) = mean(sum(simul_result,2));
     payout_std(idx5) = std(mean(reshape(sum(simul_result(1 : floor(end/10) * 10, :), 2), 10, []), 2));
     payout_matrix(33 - idx5, :) = sum(simul_result);
+    numberOfTests(33 - idx5) = size(simul_result, 1);
 end
 [~, idx5]  = max(payout);
 myhand_hold = myhand(logical(whichtohold{idx5}));
 outputer(myhand_hold, payout(idx5), payout_std(idx5));
-showall = input('show all? ', 's');
+showall = 'asdf'; %input('show all? ', 's');
 if strcmp(showall, 'y')
     for idx5 = 32 : -1 : 1
         myhand_hold = myhand(logical(whichtohold{idx5}));
         outputer(myhand_hold, payout(idx5), payout_std(idx5));
     end
 end
+y.payout_matrix = payout_matrix ./ repmat(cell2mat(money(:,2))',32, 1);
+y.hand = myhand;
+y.numberOfTests = numberOfTests
 end
