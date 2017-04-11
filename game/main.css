@@ -1,22 +1,75 @@
 .card {
-    width: 150px;
+    width: 10%;
+    margin: 1%;
 }
 .cardsmall {
-    width: 25px;
+    width: 2%;
+    margin: 0.1%;
+    vertical-align:middle;
+    
 }
 .carddark {
-    width: 150px;
+    width: 10%;
     filter: brightness(50%);
+    margin: 1%;
 }
 .cardmediumdark {
-    width: 150px;
+    width: 10%;
     filter: brightness(85%);
+    margin: 1%;
 }
 
 .cardsmalldark {
-    width: 25px;
+    width: 2%;
     filter: brightness(50%);
+    margin: 0.1%;
+    vertical-align:middle;
+    
 }
 .clicked {
     text-align: left;
+}
+
+body {
+    background-color: green;
+    position: relative
+}    
+.carddemo {
+    vertical-align:middle;
+    margin-left: 0.5%;
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
+    width: 3%;
+}
+.carddemomain {
+    z-index: 1;
+    position: absolute;
+    right: 1%;
+    top: 1%;
+    text-align: right;
+    
+    
+    padding: 0;
+}
+
+.mainbutton {
+    width: 20%;
+    height: 100%;
+    font-size:15pt;
+    margin: 2%;
+    font-weight:bold;
+}
+
+.overviewtext {
+    font-weight:bold;
+    margin-right: 2%;
+}
+#money {
+    font-weight:bold;
+    font-size:15pt;
+    margin-left: 3%
+}
+#logo {
+    font-weight:bold;
+    font-size:15pt;
 }

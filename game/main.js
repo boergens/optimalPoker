@@ -26,7 +26,7 @@ function init(filename) {
             shuffling[card_idx] = Math.floor(Math.random() * 5);
         }
     } while (Array.from(new Set(shuffling)).length < 5)    
-    var filename = "games/solution_" + Math.floor(Math.random() * 1000) + ".json";
+    var filename = "games/solution_" + Math.floor(Math.random() * 10000) + ".json";
     loadJSON(filename, function(response) {
         // Parse JSON string into object
         actual_JSON = JSON.parse(response);
@@ -71,7 +71,7 @@ function updateView(cards) {
     for (card_idx = 0; card_idx < 5; card_idx += 1) {
         document.getElementById("card" + card_idx).src = numberToImage(cards[card_idx]);
     }
-    document.getElementById("money").innerHTML = "money " + money;
+    document.getElementById("money").innerHTML = "Your money: $" + money;
 }
 
 function isFlush(cards) {
@@ -225,7 +225,7 @@ function deal() {
             break;
         }
         if (eval('is' + payoutnames[card_idx] + '(current)')) {
-            document.getElementById("logo").innerHTML = "Congratulations, you won " + payout[card_idx] + " with" + payoutnames[card_idx].replace(/([A-Z])/g," $1");
+            document.getElementById("logo").innerHTML = "Congratulations, you won $" + payout[card_idx] + " with" + payoutnames[card_idx].replace(/([A-Z])/g," $1");
             money += payout[card_idx];
             break;
         }
@@ -254,10 +254,7 @@ function deal() {
         for (payout_idx = 0; payout_idx < 9; payout_idx += 1) {
             var subtotal = actual_JSON.solution.payout_matrix[hold_idx_meta][payout_idx] * payout[payout_idx] / actual_JSON.solution.numberOfTests[hold_idx_meta];
             total += subtotal;
-            var subtotal_string = subtotal.toFixed(3);
-            if (subtotal_string === "0.000") {
-                subtotal_string = "0";
-            }
+            var subtotal_string = subtotal.toFixed(2);
             reporting_sub[payout_idx] = [subtotal_string + ': ' + payoutnames[payout_idx] + '<br>', subtotal];
             
         }
@@ -270,7 +267,7 @@ function deal() {
         if (issame) {
             style_string = 'style="background-color:green"';
         }
-        tempstring += '<button type="button" class="unclicked" ' + style_string + 'id="payout' + hold_idx + '" onClick="clickPayout(' + hold_idx + ',\'' + reporting + '\')">' + total.toFixed(2) + "</button><br>";
+        tempstring += '<button type="button" class="unclicked" ' + style_string + 'id="payout' + hold_idx + '" onClick="clickPayout(' + hold_idx + ',\'' + reporting + '\')">' + total.toFixed(1) + "</button><br>";
         outputStrings[hold_idx] = [tempstring, total];
     }
     var sortedStrings = outputStrings.sort(function (a, b) {return b[1] - a[1]});

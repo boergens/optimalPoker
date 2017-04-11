@@ -12,13 +12,22 @@
   <img class="card" id="card3" onClick="clickButton('card3')" src="PNG-cards-1.3/empty.png">
   <img class="card" id="card4" onClick="clickButton('card4')" src="PNG-cards-1.3/empty.png">
   <br>
-  <button id="btnDeal" type="button" onClick="deal()">Deal</button>
-  <br>
-  <button type="button" id="btnInit" onClick="init()">New game ($3)</button>
-  <p id="money"></p>
+  <button class="mainbutton" id="btnDeal" type="button" onClick="deal()">Deal</button>
+  <button class="mainbutton" type="button" id="btnInit" onClick="init()">New game ($3)</button><span id="money"></span>
   <p id="logo"></p>
   <p id="output"></p>
     <script type="text/javascript" src="main.js"></script>
+    <div class="carddemomain">
+    <div><span class="overviewtext">Royal Flush: $3000</span><img class="carddemo" src="PNG-cards-1.3/ace_of_hearts.png"><img class="carddemo" src="PNG-cards-1.3/king_of_hearts.png"><img class="carddemo" src="PNG-cards-1.3/queen_of_hearts.png"><img class="carddemo" src="PNG-cards-1.3/jack_of_hearts.png"><img class="carddemo" src="PNG-cards-1.3/10_of_hearts.png"></div>
+    <div><span class="overviewtext">Straight Flush: $250</span><img class="carddemo" src="PNG-cards-1.3/10_of_spades.png"><img class="carddemo" src="PNG-cards-1.3/9_of_spades.png"><img class="carddemo" src="PNG-cards-1.3/8_of_spades.png"><img class="carddemo" src="PNG-cards-1.3/7_of_spades.png"><img class="carddemo" src="PNG-cards-1.3/6_of_spades.png"></div>
+    <div><span class="overviewtext">Four Of A Kind: $125</span><img class="carddemo" src="PNG-cards-1.3/2_of_spades.png"><img class="carddemo" src="PNG-cards-1.3/2_of_diamonds.png"><img class="carddemo" src="PNG-cards-1.3/2_of_hearts.png"><img class="carddemo" src="PNG-cards-1.3/2_of_clubs.png"><img class="carddemo" src="PNG-cards-1.3/king_of_diamonds.png"></div>
+    <div><span class="overviewtext">Full House: $40</span><img class="carddemo" src="PNG-cards-1.3/4_of_clubs.png"><img class="carddemo" src="PNG-cards-1.3/4_of_hearts.png"><img class="carddemo" src="PNG-cards-1.3/4_of_diamonds.png"><img class="carddemo" src="PNG-cards-1.3/6_of_clubs.png"><img class="carddemo" src="PNG-cards-1.3/6_of_hearts.png"></div>
+    <div><span class="overviewtext">Flush: $35</span><img class="carddemo" src="PNG-cards-1.3/3_of_clubs.png"><img class="carddemo" src="PNG-cards-1.3/5_of_clubs.png"><img class="carddemo" src="PNG-cards-1.3/10_of_clubs.png"><img class="carddemo" src="PNG-cards-1.3/jack_of_clubs.png"><img class="carddemo" src="PNG-cards-1.3/ace_of_clubs.png"></div>
+    <div><span class="overviewtext">Straight: $20</span><img class="carddemo" src="PNG-cards-1.3/5_of_diamonds.png"><img class="carddemo" src="PNG-cards-1.3/4_of_hearts.png"><img class="carddemo" src="PNG-cards-1.3/3_of_spades.png"><img class="carddemo" src="PNG-cards-1.3/2_of_clubs.png"><img class="carddemo" src="PNG-cards-1.3/ace_of_hearts.png"></div>
+    <div><span class="overviewtext">Three Of A Kind: $15</span><img class="carddemo" src="PNG-cards-1.3/9_of_hearts.png"><img class="carddemo" src="PNG-cards-1.3/9_of_clubs.png"><img class="carddemo" src="PNG-cards-1.3/9_of_diamonds.png"><img class="carddemo" src="PNG-cards-1.3/king_of_spades.png"><img class="carddemo" src="PNG-cards-1.3/queen_of_diamonds.png"></div>
+    <div><span class="overviewtext">Two Pairs: $10</span><img class="carddemo" src="PNG-cards-1.3/8_of_clubs.png"><img class="carddemo" src="PNG-cards-1.3/8_of_hearts.png"><img class="carddemo" src="PNG-cards-1.3/5_of_hearts.png"><img class="carddemo" src="PNG-cards-1.3/5_of_spades.png"><img class="carddemo" src="PNG-cards-1.3/jack_of_spades.png"></div>
+    <div><span class="overviewtext">Jacks Or Higher: $5</span><img class="carddemo" src="PNG-cards-1.3/queen_of_spades.png"><img class="carddemo" src="PNG-cards-1.3/queen_of_clubs.png"><img class="carddemo" src="PNG-cards-1.3/3_of_diamonds.png"><img class="carddemo" src="PNG-cards-1.3/7_of_clubs.png"><img class="carddemo" src="PNG-cards-1.3/6_of_diamonds.png"></div>
+    </div>
   </body>
 </html>
 
